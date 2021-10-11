@@ -1,48 +1,42 @@
-from email.mime.multipart import MIMEMultipart
+from bs4 import BeautifulSoup 
+
+template = open('d:\portofoliu\dumi3\Dumi3\email.html')
+soup = BeautifulSoup(template.read(), "html.parser")
+
+article_template = soup.find('div', attrs={'class':'columns'})
+html_start = str(soup)[:str(soup).find(str(article_template))]
+html_end = str(soup)[str(soup).find(str(article_template))+len(str(article_template)):]
+html_start = html_start.replace('\n','')
+html_end = html_end.replace('\n','')
+
+import smtplib, ssl
 from email.mime.text import MIMEText
-import smtplib
-from string import Template
+from email.mime.multipart import MIMEMultipart
 
+sender_email = ""
+receiver_email =""
+#sender email password
+password = ""
 
+message = MIMEMultipart("alternative")
+message["Subject"] = "My awesome newsletter"
+message["From"] = sender_email
+message["To"] = receiver_email
 
-def get_contacts(filename):
-    emails= []
-    password = []
-    with open(filename, mode='r', encoding='utf-8') as contacts_file:
-        for a_contact in contacts_file:
-            emails.append(a_contact.split()[0])
-            password.append(a_contact.split()[1])
-    return emails, password
+text = "Hi, I've found some article that you might find interesting: %s" 
+email_content = "dumi"
+html = email_content
 
+part1 = MIMEText(text, "plain")
+part2 = MIMEText(html, "html")
 
+message.attach(part1)
+message.attach(part2)
 
-def read_template(filename):
-    with open(filename, 'r', encoding='utf-8') as template_file:
-        template_file_content = template_file.read()
-    return Template(template_file_content)
-
-
-
-s = smtplib.SMTP(host='smtp.mail.yahoo.com', port = 587)
-s.starttls()
-s.login(MY_ADDRESS, PASSWORD)
-
-emails, password = get_contacts('mycontacts.txt') 
-message_template = read_template('message.txt')
-
-
-
-for emails, password in zip(emails, password):
-       msg = MIMEMultipart()
-
-       message = message_template.substitute(EMAIL_ADDRESS = emails.title())
-
-       msg['From'] = MY_ADDRESS
-       msg['To'] = email
-       msg['Subject'] = "This is Test"
-
-       msg.attach(MIMEText(message,'plain'))
-
-       s.send_message(msg)
-
-       del msg
+context = ssl.create_default_context()
+with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
+    server.ehlo()
+    server.login(sender_email, password)
+    server.sendmail(
+        sender_email, receiver_email, message.as_string()
+    )
