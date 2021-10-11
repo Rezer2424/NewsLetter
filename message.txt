@@ -1,4 +1,4 @@
-seby_barosanu24@yahoo.com ~ $ cat message.txt 
+(e-mail) ~ $ cat message.txt 
 
 Dear ${EMAIL_ADDRESS}, 
 
