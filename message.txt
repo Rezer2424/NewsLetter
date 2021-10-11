@@ -1,0 +1,8 @@
+seby_barosanu24@yahoo.com ~ $ cat message.txt 
+
+Dear ${EMAIL_ADDRESS}, 
+
+This is a test message. 
+Have a great weekend! 
+
+Yours Truly

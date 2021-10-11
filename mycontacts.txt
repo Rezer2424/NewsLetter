@@ -1,0 +1,2 @@
+seby_barosanu@yahoo.com ~ $ cat mycontacts.txt
+szabosebastian24@yahoo.com password
